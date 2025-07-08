@@ -17,8 +17,8 @@ description: |
   Markov-babble can be added to the pages, to give the crawlers something to
   scrape up and train their LLMs on, hopefully accelerating model collapse.
 
-grade: devel # must be 'stable' to release into candidate/stable channels
-confinement: devmode # use 'strict' once you have the right plugs and slots
+grade: stable # must be 'stable' to release into candidate/stable channels
+confinement: strict # use 'strict' once you have the right plugs and slots
 
 source-code:
   - https://zadzmo.org/downloads/nepenthes
@@ -28,6 +28,10 @@ website:
   - https://zadzmo.org/code/nepenthes/
 issues:
   - https://github.com/olivercalder/nepenthes-snap/issues
+
+environment:
+  # Tell nepenthes where to find core/microdyne.lua and core/nepenthes.lua
+  NDIR: $SNAP
 
 apps:
   nepenthes:
@@ -60,8 +64,13 @@ parts:
       - libreadline-dev
       - unzip
     override-build: |
-      ./configure --with-lua-include=/usr/include
-      craftctl default
-    override-stage: |
-      craftctl default
+      ./configure --with-lua-include=/usr/include --rocks-tree=${CRAFT_PART_INSTALL}/usr/local
+      make
+      # Install luarocks to the path during build so we can use it to install
+      # lua libraries which are not available in repos. We don't need to stage
+      # luarocks itself, just the libraries it installs.
+      make install
+      luarocks config variables.LUA_INCDIR /usr/include/lua5.4
       luarocks install lunix
+      # XXX: lua libraries end up in $SNAP/usr/local and $SNAP/external, how
+      # can they be visible from /usr/local when the snap runs?
