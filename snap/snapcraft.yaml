@@ -1,0 +1,67 @@
+name: nepenthes
+title: Nepenthes
+license: MIT
+base: core24
+version: '1.2.0'
+summary: A tarpit intended to catch web crawlers
+description: |
+  This is a tarpit intended to catch web crawlers. Specifically, it's
+  targetting crawlers that scrape data for LLMs - but really, like the plants
+  it is named after, it'll eat just about anything that finds it's way inside.
+
+  It works by generating an endless sequences of pages, each of which with
+  dozens of links, that simply go back into a the tarpit. Pages are randomly
+  generated, but in a deterministic way, causing them to appear to be flat
+  files that never change. Intentional delay is added to prevent crawlers from
+  bogging down your server, in addition to wasting their time. Lastly, optional
+  Markov-babble can be added to the pages, to give the crawlers something to
+  scrape up and train their LLMs on, hopefully accelerating model collapse.
+
+grade: devel # must be 'stable' to release into candidate/stable channels
+confinement: devmode # use 'strict' once you have the right plugs and slots
+
+source-code:
+  - https://zadzmo.org/downloads/nepenthes
+contact:
+  - https://github.com/olivercalder/nepenthes-snap/issues
+website:
+  - https://zadzmo.org/code/nepenthes/
+issues:
+  - https://github.com/olivercalder/nepenthes-snap/issues
+
+apps:
+  nepenthes:
+    command: nepenthes $SNAP_DATA/config.yml
+    daemon: simple
+    plugs:
+      - network-bind
+
+parts:
+  nepenthes:
+    plugin: dump
+    source: https://zadzmo.org/downloads/nepenthes/file/nepenthes-1.2.tar.gz
+    source-checksum: sha256/45cd8a09a662823e805446d96f6e29bd8328a23d066f1395fd6c3f5fe9422124
+    stage-packages:
+      - lua5.4
+      - sqlite3
+      - openssl
+      - lua-cqueues
+      - lua-luaossl
+      - lua-lpeg
+      - lua-zlib
+      - lua-dbi-sqlite3
+  luarocks-packages:
+    after:
+      - nepenthes # so we have all the deps provided by the package manager
+    plugin: make
+    source: https://luarocks.github.io/luarocks/releases/luarocks-3.12.2.tar.gz
+    build-packages:
+      - liblua5.4-dev
+      - libreadline-dev
+      - unzip
+    override-build: |
+      ./configure --with-lua-include=/usr/include
+      craftctl default
+    override-stage: |
+      craftctl default
+      luarocks install lunix
