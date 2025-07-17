@@ -52,6 +52,9 @@ parts:
       - lua5.4
       - sqlite3
       - openssl
+    prime:
+      - -usr/share # changelogs, manpages, and readmes
+      - -external/lib # luarocks manifests
   luarocks-packages:
     after:
       - nepenthes # so we have all the deps provided by the package manager
@@ -78,3 +81,5 @@ parts:
       luarocks install lua-zlib
       luarocks install luadbi-sqlite3
       luarocks install lunix
+    prime:
+      - -usr/local/lib/luarocks # luarocks manifests
