@@ -32,6 +32,9 @@ issues:
 environment:
   # Tell nepenthes where to find core/microdyne.lua and core/nepenthes.lua
   NDIR: $SNAP
+  # Tell lua where to find libraries
+  LUA_PATH: $SNAP/?.lua;$SNAP/components/?.lua;$SNAP/usr/local/share/lua/5.4/?.lua;$SNAP/usr/local/share/lua/5.4/?/?.lua;$SNAP/usr/local/share/lua/5.4/?/init.lua;$SNAP/external/share/lua/5.4/?.lua;$SNAP/external/share/lua/5.4/?/?.lua;$SNAP/external/share/lua/5.4/?/init.lua;;
+  LUA_CPATH: $SNAP/usr/local/lib/lua/5.4/?.so;$SNAP/usr/local/lib/lua/5.4/?/?.so;;
 
 apps:
   nepenthes:
@@ -49,11 +52,6 @@ parts:
       - lua5.4
       - sqlite3
       - openssl
-      - lua-cqueues
-      - lua-luaossl
-      - lua-lpeg
-      - lua-zlib
-      - lua-dbi-sqlite3
   luarocks-packages:
     after:
       - nepenthes # so we have all the deps provided by the package manager
@@ -63,6 +61,9 @@ parts:
       - liblua5.4-dev
       - libreadline-dev
       - unzip
+      - libssl-dev
+      - m4
+      - libsqlite3-dev
     override-build: |
       ./configure --with-lua-include=/usr/include --rocks-tree=${CRAFT_PART_INSTALL}/usr/local
       make
@@ -71,6 +72,9 @@ parts:
       # luarocks itself, just the libraries it installs.
       make install
       luarocks config variables.LUA_INCDIR /usr/include/lua5.4
+      luarocks install cqueues
+      luarocks install luaossl
+      luarocks install lpeg
+      luarocks install lua-zlib
+      luarocks install luadbi-sqlite3
       luarocks install lunix
-      # XXX: lua libraries end up in $SNAP/usr/local and $SNAP/external, how
-      # can they be visible from /usr/local when the snap runs?
