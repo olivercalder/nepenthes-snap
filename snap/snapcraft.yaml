@@ -30,22 +30,16 @@ description: |
   is recommended that you provide training data to train the markov babbler.
   This can be done by sending arbitrary data to nepenthes, for example:
 
-  ```sh
-  cat /path/to/file.txt | nepenthes.train-markov-corpus
-  ```
+  `cat /path/to/file.txt | nepenthes.train-markov-corpus`
 
   If training is interrupted, you can skip lines you have already trained.
   For example, to skip the first 150 lines of the training file:
 
-  ```sh
-  cat /path/to/file.txt | nepenthes.train-markov-corpus 150
-  ```
+  `cat /path/to/file.txt | nepenthes.train-markov-corpus 150`
 
   If you wish to delete the markov corpus and start again, run:
 
-  ```sh
-  nepenthes.delete-markov-corpus
-  ```
+  `nepenthes.delete-markov-corpus`
 
   ## License
 
