@@ -5,20 +5,55 @@ base: core24
 version: '1.2.0'
 summary: A tarpit intended to catch web crawlers
 description: |
-  This is a tarpit intended to catch web crawlers. Specifically, it's
-  targetting crawlers that scrape data for LLMs - but really, like the plants
-  it is named after, it'll eat just about anything that finds it's way inside.
+  Nepenthes is a tarpit intended to catch web crawlers. It is developed by
+  Aaron B. For more information about Nepenthes, please see:
 
-  It works by generating an endless sequences of pages, each of which with
-  dozens of links, that simply go back into a the tarpit. Pages are randomly
-  generated, but in a deterministic way, causing them to appear to be flat
-  files that never change. Intentional delay is added to prevent crawlers from
-  bogging down your server, in addition to wasting their time. Lastly, optional
-  Markov-babble can be added to the pages, to give the crawlers something to
-  scrape up and train their LLMs on, hopefully accelerating model collapse.
+  https://zadzmo.org/code/nepenthes/
 
-grade: stable # must be 'stable' to release into candidate/stable channels
-confinement: strict # use 'strict' once you have the right plugs and slots
+  This snap package is maintained by Oliver Calder, and is not affiliated
+  with nor endorsed by the upstream Nepenthes project or its author.
+
+  ## Configuration
+
+  By default, `nepenthes` listens on port 8893. To change this or other
+  configuration settings, edit the config file:
+
+  `/var/snap/nepenthes/current/config.yaml`
+
+  Please see the upstream documentation for full configuration options:
+
+  https://zadzmo.org/code/nepenthes/
+
+  ## Training
+
+  Nepenthes uses a markov corpus to populate generated pages with words. It
+  is recommended that you provide training data to train the markov babbler.
+  This can be done by sending arbitrary data to nepenthes, for example:
+
+  ```sh
+  cat /path/to/file.txt | nepenthes.train-markov-corpus
+  ```
+
+  If training is interrupted, you can skip lines you have already trained.
+  For example, to skip the first 150 lines of the training file:
+
+  ```sh
+  cat /path/to/file.txt | nepenthes.train-markov-corpus 150
+  ```
+
+  If you wish to delete the markov corpus and start again, run:
+
+  ```sh
+  nepenthes.delete-markov-corpus
+  ```
+
+  ## License
+
+  This snap package is licensed under the MIT license, the same license as the
+  Nepenthes project.
+
+grade: stable
+confinement: strict
 
 source-code:
   - https://zadzmo.org/downloads/nepenthes
@@ -83,6 +118,7 @@ parts:
       - -config.yml # testing config from upstream
       - -docker # docker config
       - -external/lib # luarocks manifests
+      - -load.sh # training script we don't use
       - -release # scripts to build release
       - -usr/share # changelogs, manpages, and readmes
   luarocks-packages:

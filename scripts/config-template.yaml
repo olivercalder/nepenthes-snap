@@ -17,7 +17,7 @@ forget_time: 86400
 # A user-agent that generates more than this number of requests will not be deleted from the statistics table.
 forget_hits: 10
 
-# To disable markov feature, set markov to ''.
+# To disable markov feature, remove/comment out the markov line.
 markov: '$SNAP_COMMON/corpus.sqlite.db'
 # Minimum number of words to babble on a page.
 markov_min: 20
