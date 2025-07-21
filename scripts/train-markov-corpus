@@ -1,0 +1,53 @@
+#!/bin/sh -e
+
+# This script is inspired by `load.sh` from the Nepenthes project.
+# It has been modified to run without filesystem access, with training data
+# piped into the process:
+#
+#     cat /path/to/data.txt | nepenthes.train-markov-corpus
+#
+# If training was interrupted, lines which were already successfully sent can
+# be skipped by passing an argument indicating the number of lines to skip:
+#
+#     cat /path/to/data.txt | nepenthes.train-markov-corpus 50
+
+skip=0
+lines_sent=0
+lines_buffered=0
+send=""
+
+# Argument: skip ahead N lines, if training was interrupted
+if [ -n "$1" ] ; then
+	skip="$1"
+fi
+
+# Get port where service is running
+port="$(grep '^http_port:' "$SNAP_DATA/config.yaml" | cut -d ' ' -f 2)"
+
+url="http://localhost:$port/train"
+
+do_post() {
+	lines_sent="$((lines_sent + lines_buffered))"
+	echo "$(date +%H:%M:%S) sending through line $lines_sent"
+	curl -X POST -H 'Content-type: text/plain' -d "$send" "$url"
+	echo "... done."
+}
+
+while read -r line ; do
+	if [ "$skip" -gt 0 ] ; then
+		skip="$((skip - 1))"
+		lines_sent="$((lines_sent + 1))"
+	else
+		send="$send $line"
+		lines_buffered="$((lines_buffered + 1))"
+		if [ "$lines_buffered" -ge 50 ] ; then
+			do_post
+			lines_buffered=0
+			send=""
+		fi
+	fi
+done
+
+if [ "$lines_buffered" -gt 0 ] ; then
+	do_post
+fi

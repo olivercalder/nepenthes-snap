@@ -43,6 +43,10 @@ apps:
     daemon: simple
     plugs:
       - network-bind
+  train-markov-corpus:
+    command: train-markov-corpus
+    plugs:
+      - network # to POST to the nepenthes API
 
 parts:
   scripts:
@@ -70,6 +74,7 @@ parts:
       - lua5.4
       - sqlite3
       - openssl
+      - curl # to POST training data to the nepenthes API
     prime:
       - -config.yml # testing config from upstream
       - -docker # docker config
