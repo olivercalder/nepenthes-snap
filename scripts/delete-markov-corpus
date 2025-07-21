@@ -1,0 +1,8 @@
+#!/bin/sh -e
+
+# Get port where service is running
+port="$(grep '^http_port:' "$SNAP_DATA/config.yaml" | cut -d ' ' -f 2)"
+
+url="http://localhost:$port/train"
+
+curl -X DELETE "$url"

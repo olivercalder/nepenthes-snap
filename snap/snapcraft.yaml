@@ -47,6 +47,10 @@ apps:
     command: train-markov-corpus
     plugs:
       - network # to POST to the nepenthes API
+  delete-markov-corpus:
+    command: delete-markov-corpus
+    plugs:
+      - network # to DELETE to the nepenthes API
 
 parts:
   scripts:
