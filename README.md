@@ -1,5 +1,7 @@
 # nepenthes-snap
 
+[![nepenthes](https://snapcraft.io/nepenthes/badge.svg)](https://snapcraft.io/nepenthes)
+
 Nepenthes is a tarpit intended to catch web crawlers. It is developed by
 Aaron B. For more information about Nepenthes, please see:
 
@@ -9,6 +11,8 @@ This snap package is maintained by Oliver Calder, and is not affiliated
 with nor endorsed by the upstream Nepenthes project or its author.
 
 ## Installation
+
+[![Get it from the Snap Store](https://snapcraft.io/en/dark/install.svg)](https://snapcraft.io/nepenthes)
 
 To install the `nepenthes` snap (assuming you already have `snapd` installed),
 simply run:
