@@ -22,6 +22,7 @@ confinement: strict # use 'strict' once you have the right plugs and slots
 
 source-code:
   - https://zadzmo.org/downloads/nepenthes
+  - https://github.com/olivercalder/nepenthes-snap
 contact:
   - https://github.com/olivercalder/nepenthes-snap/issues
 website:
@@ -38,12 +39,29 @@ environment:
 
 apps:
   nepenthes:
-    command: nepenthes $SNAP_DATA/config.yml
+    command: launch-nepenthes
     daemon: simple
     plugs:
       - network-bind
 
 parts:
+  scripts:
+    plugin: dump
+    source: scripts
+    source-type: local
+  envsubst:
+    # We need envsubst to set config variables at runtime
+    plugin: nil
+    stage-packages:
+      - gettext
+    prime:
+      - usr/bin/envsubst # only keep the envsubst binary we care about
+  dictionary:
+    plugin: nil
+    stage-packages:
+      - wamerican-huge # use a large american wordlist by default
+    prime:
+      - usr/share/dict # only keep the word dictionary file
   nepenthes:
     plugin: dump
     source: https://zadzmo.org/downloads/nepenthes/file/nepenthes-1.2.tar.gz
@@ -53,8 +71,11 @@ parts:
       - sqlite3
       - openssl
     prime:
-      - -usr/share # changelogs, manpages, and readmes
+      - -config.yml # testing config from upstream
+      - -docker # docker config
       - -external/lib # luarocks manifests
+      - -release # scripts to build release
+      - -usr/share # changelogs, manpages, and readmes
   luarocks-packages:
     after:
       - nepenthes # so we have all the deps provided by the package manager

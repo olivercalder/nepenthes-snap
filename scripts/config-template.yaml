@@ -1,0 +1,36 @@
+---
+# If running locally or behind a reverse proxy, it's probably best to set host to 'localhost'.
+http_host: '::'
+# Listen on whichever port you prefer.
+http_port: 8893
+
+# Prefix all generated links should be given. Can be overriden with the X-Prefix HTTP header. Defaults to nothing.
+#prefix: ''
+
+# Longest amount of delay to add to every request. Increase to slow down crawlers; too slow and they might not come back.
+max_wait: 3
+# Smallest amount of delay to add to every request. A random value is chosen between max_wait and min_wait.
+min_wait: 1
+
+# Length of time, in seconds, that a given user-agent can go missing before being deleted from the statistics table.
+forget_time: 86400
+# A user-agent that generates more than this number of requests will not be deleted from the statistics table.
+forget_hits: 10
+
+# To disable markov feature, set markov to ''.
+markov: '$SNAP_COMMON/corpus.sqlite.db'
+# Minimum number of words to babble on a page.
+markov_min: 20
+# Maximum number of words to babble on a page. Very large values can cause serious CPU load.
+markov_max: 120
+
+# Path to dictionary file. By default, uses word list from wamerican-huge package.
+# If you'd like to use different words, copy a words file into /var/snap/nepenthes/common/
+# and set words to its absolute path (you may use the $SNAP_COMMON environment variable).
+words: '$SNAP/usr/share/dict/american-english-huge'
+
+
+# DO NOT MODIFY -- PATHS ARE SNAP SPECIFIC
+templates: '$SNAP/templates'
+persist_stats: '$SNAP_COMMON/statsfile.json'
+seed_file: '$SNAP_COMMON/seed.txt'

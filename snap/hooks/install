@@ -1,0 +1,5 @@
+#!/bin/sh -e
+
+if [ ! -f $SNAP_DATA/config.yaml ] ; then
+	cp $SNAP/config-template.yaml $SNAP_DATA/config.yaml
+fi

@@ -1,0 +1,5 @@
+#!/bin/sh -e
+
+# Substitute environment variables in config file.
+envsubst <$SNAP_DATA/config.yaml > /tmp/config.yaml
+$SNAP/nepenthes /tmp/config.yaml
