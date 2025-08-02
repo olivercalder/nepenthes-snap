@@ -2,7 +2,7 @@ name: nepenthes
 title: Nepenthes
 license: MIT
 base: core24
-version: '1.2.0'
+version: '1.2-d1'
 summary: A tarpit intended to catch web crawlers
 description: |
   Nepenthes is a tarpit intended to catch web crawlers. It is developed by
@@ -109,8 +109,8 @@ parts:
       - usr/share/dict # only keep the word dictionary file
   nepenthes:
     plugin: dump
-    source: https://zadzmo.org/downloads/nepenthes/file/nepenthes-1.2.tar.gz
-    source-checksum: sha256/45cd8a09a662823e805446d96f6e29bd8328a23d066f1395fd6c3f5fe9422124
+    source: https://zadzmo.org/downloads/nepenthes/file/nepenthes-1.2-d1.tar.gz
+    source-checksum: sha256/48bfc36eff5c72ad7419531acc13f293a7ba9781fb75244ad1a730090dab95b4
     stage-packages:
       - lua5.4
       - sqlite3
